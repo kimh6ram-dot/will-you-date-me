@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>나랑 데이트 할래? 🌸</title>
+
+  <!-- 폰트는 시스템에 설치된 네모니나 / 옴니고딕을 우선 사용합니다.
+       (설치되어 있지 않으면 한글 시스템 폰트로 자동 대체) -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- 떠다니는 하트 등 배경 효과가 들어갈 레이어 -->
+  <div class="floating-layer" id="floatingLayer" aria-hidden="true"></div>
+
+  <!-- 화면 중앙 카드 -->
+  <main class="card" id="card">
+
+    <!-- ===== 1단계: 첫 화면 ===== -->
+    <section class="step is-active" id="step1" data-step="1">
+      <h1 class="title">🌸 나랑 데이트 할래? 🌸</h1>
+
+      <!-- 싫어 버튼이 자유롭게 도망다닐 수 있는 영역 -->
+      <div class="btn-row btn-row--playground" id="playground">
+        <button class="btn btn--yes" id="yesBtn" type="button">응 좋아 ♥</button>
+        <button class="btn btn--no" id="noBtn" type="button">싫어 👣</button>
+      </div>
+    </section>
+
+    <!-- ===== 2단계: 수락 확인 ===== -->
+    <section class="step" id="step2" data-step="2">
+      <h1 class="title">잠시만.. 좋다고?? 😭</h1>
+      <p class="subtitle">난 너가 싫다고 할 줄 알았어 ...</p>
+      <div class="btn-row">
+        <button class="btn btn--yes" id="reallyYesBtn" type="button">응응응응</button>
+      </div>
+    </section>
+
+    <!-- ===== 3단계: 날짜/시간 선택 ===== -->
+    <section class="step" id="step3" data-step="3">
+      <h1 class="title">그래서... 언제가 편해? 📅</h1>
+      <p class="subtitle">날짜랑 시간을 골라줘!</p>
+
+      <div class="field">
+        <label class="field__label" for="dateInput">📆 날짜</label>
+        <input class="input" type="date" id="dateInput" />
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="timeInput">⏰ 시간</label>
+        <input class="input" type="time" id="timeInput" />
+      </div>
+
+      <!-- 비어 있을 때 보여줄 귀여운 알림 -->
+      <p class="hint" id="step3Hint"></p>
+
+      <div class="btn-row">
+        <button class="btn btn--yes" id="dateNextBtn" type="button">이 날 좋아!</button>
+      </div>
+    </section>
+
+    <!-- ===== 4단계: 음식 선택 ===== -->
+    <section class="step" id="step4" data-step="4">
+      <h1 class="title">그래! 이 날 뭐 땡길 것 같아?</h1>
+      <p class="subtitle">난 뭐든 괜찮아 😊</p>
+
+      <div class="food-grid">
+        <button class="btn btn--food" type="button" data-food="🍕 피자">🍕<span>피자</span></button>
+        <button class="btn btn--food" type="button" data-food="🍣 스시">🍣<span>스시</span></button>
+        <button class="btn btn--food" type="button" data-food="🍔 햄버거">🍔<span>햄버거</span></button>
+        <button class="btn btn--food" type="button" data-food="🍝 파스타">🍝<span>파스타</span></button>
+        <button class="btn btn--food" type="button" data-food="🌮 타코">🌮<span>타코</span></button>
+        <button class="btn btn--food" type="button" data-food="🍜 라멘">🍜<span>라멘</span></button>
+      </div>
+    </section>
+
+    <!-- ===== 5단계: 최종 화면 ===== -->
+    <section class="step" id="step5" data-step="5">
+      <h1 class="title" id="finalTitle">싫다고 안해줘서 기뻐 🚶🏻‍♀️</h1>
+      <p class="subtitle">예쁘게 입고 갈거야 나 엄청 기대돼! 💕</p>
+
+      <!-- 요약 카드 -->
+      <div class="summary">
+        <div class="summary__head">우리의 데이트 약속 💌</div>
+        <div class="summary__row"><span>날짜</span><strong id="sumDate">-</strong></div>
+        <div class="summary__row"><span>시간</span><strong id="sumTime">-</strong></div>
+        <div class="summary__row"><span>메뉴</span><strong id="sumFood">-</strong></div>
+      </div>
+
+      <div class="btn-row btn-row--stack">
+        <button class="btn btn--yes" id="sendBtn" type="button">내 답변 보내기 💌</button>
+        <button class="btn btn--ghost" id="restartBtn" type="button">처음부터 다시하기</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+/* =========================================================
+   데이트 신청 페이지 - 스타일
+   파스텔 핑크 / 깔끔한 카드형 UI / 반응형
+   ========================================================= */
+
+:root {
+  --pink-bg-1: #ffe3ee;   /* 연핑크 */
+  --pink-bg-2: #fff0f5;   /* 크림핑크 */
+  --pink-bg-3: #fffafc;   /* 거의 화이트 */
+  --pink-main: #ff8fb1;   /* 메인 핑크 버튼 */
+  --pink-deep: #ff6f9c;   /* 진한 핑크 (hover) */
+  --coral:     #ffb3a7;   /* 코랄 포인트 */
+  --gray-no:   #d9d2d6;   /* 싫어 버튼 회색 */
+  --text:      #6b4a52;   /* 딥 브라운/핑크 텍스트 */
+  --text-soft: #a98a92;   /* 보조 텍스트 */
+  --card-bg:   rgba(255, 255, 255, 0.78);
+  --shadow:    0 18px 40px rgba(255, 143, 177, 0.28);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: '네모니나', 'Nemonina', '옴니고딕', 'OmniGothic', 'Omni Gothic',
+               'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  color: var(--text);
+  background: linear-gradient(135deg, var(--pink-bg-1) 0%, var(--pink-bg-2) 45%, var(--pink-bg-3) 100%);
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+
+/* ---------- 떠다니는 효과 레이어 ---------- */
+.floating-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.floating-layer span {
+  position: absolute;
+  bottom: -40px;
+  font-size: 26px;
+  opacity: 0.9;
+  animation: floatUp linear forwards;
+}
+@keyframes floatUp {
+  0%   { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.9; }
+  100% { transform: translateY(-110vh) scale(1.1) rotate(40deg); opacity: 0; }
+}
+
+/* 컨페티 (2단계) */
+.confetti {
+  position: fixed;
+  top: -30px;
+  font-size: 24px;
+  pointer-events: none;
+  z-index: 5;
+  animation: confettiFall ease-in forwards;
+}
+@keyframes confettiFall {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+}
+
+/* ---------- 카드 ---------- */
+.card {
+  position: relative;
+  z-index: 1;
+  display: flex;            /* 활성 단계를 카드 중앙에 배치 */
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 420px;
+  min-height: 420px;
+  padding: 40px 30px;
+  background: var(--card-bg);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  overflow: hidden;
+}
+
+/* ---------- 단계 전환 ---------- */
+.step { display: none; }
+.step.is-active {
+  display: flex;                 /* 콘텐츠를 세로로 정렬 */
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  animation: fadeScaleIn 0.45s ease both;
+}
+@keyframes fadeScaleIn {
+  from { opacity: 0; transform: scale(0.94) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ---------- 텍스트 ---------- */
+.title {
+  font-size: 1.55rem;
+  line-height: 1.4;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+.subtitle {
+  font-size: 1.02rem;
+  color: var(--text-soft);
+  margin-bottom: 26px;
+}
+
+/* ---------- 버튼 공통 ---------- */
+.btn {
+  font-family: inherit;
+  font-size: 1.05rem;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 26px;
+  cursor: pointer;
+  color: #fff;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:hover  { transform: scale(1.06); }
+.btn:active { transform: scale(0.97); }
+
+.btn--yes {
+  background: linear-gradient(135deg, var(--pink-main), var(--pink-deep));
+  box-shadow: 0 8px 18px rgba(255, 111, 156, 0.4);
+}
+.btn--yes:hover { background: linear-gradient(135deg, var(--pink-deep), #ff5b8d); }
+
+.btn--no {
+  background: var(--gray-no);
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(160, 150, 155, 0.3);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--text-soft);
+  border: 2px solid #f0c8d6;
+}
+.btn--ghost:hover { background: #fff0f5; color: var(--pink-deep); }
+
+/* ---------- 버튼 배치 ---------- */
+.btn-row {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-row--stack { flex-direction: column; align-items: stretch; }
+.btn-row--stack .btn { width: 100%; }
+
+/* 싫어 버튼 도망 영역 */
+.btn-row--playground {
+  position: relative;
+  min-height: 70px;
+  margin-top: 28px; /* 첫 화면 메인 텍스트와 버튼 사이 간격 */
+}
+/* 도망 상태일 때 절대 위치로 전환 (부드럽게 슬라이드) */
+.btn--no.is-running {
+  position: fixed;
+  z-index: 10;
+  margin: 0;
+  transition: left 0.12s ease, top 0.12s ease, transform 0.18s ease;
+}
+
+/* ---------- 입력 필드 (3단계) ---------- */
+.field {
+  text-align: left;
+  margin-bottom: 18px;
+}
+.field__label {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.input {
+  width: 100%;
+  font-family: inherit;
+  font-size: 1.05rem;
+  color: var(--text);
+  padding: 13px 16px;
+  border: 2px solid #ffd3e2;
+  border-radius: 16px;
+  background: #fffafc;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.input:focus {
+  border-color: var(--pink-main);
+  box-shadow: 0 0 0 4px rgba(255, 143, 177, 0.18);
+}
+.hint {
+  min-height: 22px;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  color: var(--pink-deep);
+}
+
+/* ---------- 음식 그리드 (4단계) ---------- */
+.food-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.btn--food {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 1.7rem;
+  padding: 16px 8px;
+  border-radius: 20px;
+  background: #fff;
+  color: var(--text);
+  box-shadow: 0 6px 14px rgba(255, 143, 177, 0.18);
+}
+.btn--food span { font-size: 0.85rem; }
+.btn--food:hover {
+  transform: translateY(-6px) scale(1.05);
+  background: #fff0f5;
+}
+
+/* ---------- 요약 카드 (5단계) ---------- */
+.summary {
+  background: #fff0f5;
+  border: 1.5px solid #ffd3e2;
+  border-radius: 20px;
+  padding: 20px 22px;
+  margin-bottom: 24px;
+  text-align: left;
+}
+.summary__head {
+  text-align: center;
+  font-size: 1.15rem;
+  margin-bottom: 14px;
+  color: var(--pink-deep);
+}
+.summary__row {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 0;
+  border-bottom: 1px dashed #ffd3e2;
+  font-size: 1.02rem;
+}
+.summary__row:last-child { border-bottom: none; }
+.summary__row span { color: var(--text-soft); }
+.summary__row strong { color: var(--text); font-weight: 400; }
+
+/* ---------- 반응형 ---------- */
+@media (max-width: 420px) {
+  .card { padding: 30px 20px; border-radius: 22px; }
+  .title { font-size: 1.35rem; }
+  .btn { font-size: 1rem; padding: 13px 22px; }
+  .food-grid { gap: 10px; }
+  .btn--food { font-size: 1.5rem; padding: 14px 6px; }
+}

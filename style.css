@@ -111,6 +111,7 @@ body {
   line-height: 1.4;
   margin-bottom: 16px;
   color: var(--text);
+  white-space: pre-line; /* 텍스트의 \n 을 실제 줄바꿈으로 표시 */
 }
 .subtitle {
   font-size: 1.02rem;
@@ -234,7 +235,7 @@ body {
   background: #fff0f5;
 }
 
-/* ---------- 요약 카드 (5단계) ---------- */
+/* ---------- 요약 카드 (5단계 · 화면 표시용) ---------- */
 .summary {
   background: #fff0f5;
   border: 1.5px solid #ffd3e2;
@@ -259,6 +260,96 @@ body {
 .summary__row:last-child { border-bottom: none; }
 .summary__row span { color: var(--text-soft); }
 .summary__row strong { color: var(--text); font-weight: 400; }
+
+/* ---------- 저장 전용 카드 (화면 밖 · JPG 캡처 영역) ---------- */
+/* 화면에는 안 보이게 왼쪽 밖으로 밀어두되, 레이아웃은 유지(캡처 가능) */
+.capture-stage {
+  position: fixed;
+  left: -10000px;
+  top: 0;
+  width: 400px;
+  padding: 26px;
+  background: #ffeef4;   /* 카드 그림자가 놓일 핑크 프레임 */
+}
+
+.keepsake {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(160deg, #fff6fa 0%, #ffe7f1 55%, #ffd9e8 100%);
+  border: 3px solid #ffffff;        /* inset 그림자 대신 실제 흰 테두리 */
+  outline: 1px solid #ffc9dd;       /* 그 바깥 얇은 핑크 라인 */
+  border-radius: 24px;
+  padding: 28px 26px 24px;
+  text-align: center;
+  box-shadow: 0 10px 22px rgba(255, 143, 177, 0.28);
+}
+
+/* 모서리 장식 이모지 */
+.keepsake__deco {
+  position: absolute;
+  font-size: 1.5rem;
+  opacity: 0.6;
+  pointer-events: none;
+}
+.keepsake__deco--tl { top: 12px; left: 14px; }
+.keepsake__deco--br { bottom: 12px; right: 14px; }
+
+/* 상단 원형 배지 */
+.keepsake__badge {
+  width: 58px;
+  height: 58px;
+  margin: 2px auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 6px 16px rgba(255, 111, 156, 0.3);
+}
+
+.keepsake__title {
+  font-size: 1.4rem;
+  color: var(--pink-deep);
+  margin-bottom: 4px;
+}
+.keepsake__sub {
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: var(--text-soft);
+  margin-bottom: 20px;
+}
+
+/* 항목 리스트 (날짜/시간/메뉴) */
+.keepsake__list {
+  text-align: left;
+  background: #fffafc;               /* 불투명 배경 (반투명은 캡처 시 깨짐) */
+  border: 1px solid #ffd0e0;          /* inset 그림자 대신 실제 테두리 */
+  border-radius: 16px;
+  padding: 4px 16px;
+  margin-bottom: 18px;
+}
+.keepsake__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 2px;
+  border-bottom: 1px dashed #ffd0e0;
+  font-size: 1.05rem;
+}
+.keepsake__item:last-child { border-bottom: none; }
+.keepsake__ico { font-size: 1.15rem; }
+.keepsake__key { color: var(--text-soft); width: 42px; }
+.keepsake__item strong {
+  margin-left: auto;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.keepsake__foot {
+  font-size: 1.05rem;
+  color: var(--pink-deep);
+}
 
 /* ---------- 반응형 ---------- */
 @media (max-width: 420px) {

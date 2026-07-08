@@ -1,11 +1,7 @@
 /* =========================================================
    데이트 신청 페이지 - 스크립트
-   단계 전환, 도망가는 싫어 버튼, 컨페티, 요약, mailto 전송
+   단계 전환, 도망가는 싫어 버튼, 컨페티, 요약, 답장 이미지 저장(JPG)
    ========================================================= */
-
-/* 받는 사람 / 메일 설정 */
-const TO_EMAIL = "kimh6ram@gmail.com";
-const MAIL_SUBJECT = "데이트 신청 답변이 도착했어요 💖";
 
 /* 사용자의 모든 선택을 담는 객체 */
 const answers = {
@@ -136,7 +132,7 @@ reallyYesBtn.addEventListener("click", () => goStep(3));
 /* 화면 위쪽에서 컨페티 이모지가 쏟아지는 효과 */
 function launchConfetti() {
   const emojis = ["🎉", "🎊", "✨", "💖", "💕", "🌸"];
-  const count = 26;
+  const count = 70;
   for (let i = 0; i < count; i++) {
     const piece = document.createElement("span");
     piece.className = "confetti";
@@ -210,14 +206,22 @@ function showFinal() {
   // 콘솔에서 저장 구조 확인 가능
   console.log("📦 저장된 답변:", answers);
 
-  // 제목의 n시를 선택한 시간으로 치환
+  // 제목의 n시를 선택한 시간으로 치환 (쉼표 뒤에서 줄바꿈)
   finalTitle.textContent =
-    `싫다고 안해줘서 기뻐, ${answers.time}시에 내가 데리러 갈게 🚶🏻‍♀️`;
+    `싫다고 안해줘서 기뻐,\n${answers.time}시에 내가 데리러 갈게 🚶🏻‍♀️`;
 
-  // 요약 카드 채우기
+  // 요약 카드 채우기 (화면 표시용)
   sumDate.textContent = formatKoreanDate(answers.date);
   sumTime.textContent = answers.time || "-";
   sumFood.textContent = answers.food || "-";
+
+  // 저장 전용 카드도 같은 값으로 채우기
+  const capDate = document.getElementById("capDate");
+  const capTime = document.getElementById("capTime");
+  const capFood = document.getElementById("capFood");
+  if (capDate) capDate.textContent = formatKoreanDate(answers.date);
+  if (capTime) capTime.textContent = answers.time || "-";
+  if (capFood) capFood.textContent = answers.food || "-";
 
   goStep(5);
   startFloatingHearts();
@@ -247,54 +251,44 @@ function startFloatingHearts() {
 }
 
 /* =========================================================
-   전송 (mailto 방식) + 다시하기
+   답장 이미지 저장 (요약 박스를 JPG로) + 다시하기
    ========================================================= */
-const sendBtn = document.getElementById("sendBtn");
+const saveBtn = document.getElementById("saveBtn");
+const saveHint = document.getElementById("saveHint");
 const restartBtn = document.getElementById("restartBtn");
+const captureStage = document.getElementById("captureStage");
 
-sendBtn.addEventListener("click", () => {
-  // ----- (A) 현재 구현: mailto 링크로 기본 메일 앱 열기 -----
-  const body =
-    `데이트 신청에 대한 내 답변이야! 💕\n\n` +
-    `날짜: ${formatKoreanDate(answers.date)}\n` +
-    `시간: ${answers.time}\n` +
-    `메뉴: ${answers.food}\n` +
-    `수락 여부: 응! (accepted: true)\n` +
-    `작성 시각: ${answers.createdAt}\n`;
+/* 화면 밖 저장 전용 카드(#captureStage)를 JPG 이미지로 내려받는다.
+   저장한 이미지를 상대방에게 답장으로 보내면 됨 💌 */
+saveBtn.addEventListener("click", () => {
+  if (typeof html2canvas !== "function") {
+    saveHint.textContent = "이미지 저장 도구를 불러오지 못했어 😢 (인터넷 연결 확인)";
+    return;
+  }
 
-  const mailto =
-    `mailto:${TO_EMAIL}` +
-    `?subject=${encodeURIComponent(MAIL_SUBJECT)}` +
-    `&body=${encodeURIComponent(body)}`;
+  saveHint.textContent = "이미지 만드는 중... 🎀";
 
-  window.location.href = mailto;
+  html2canvas(captureStage, {
+    backgroundColor: "#ffeef4", // 프레임 배경색과 동일 (투명 방지)
+    scale: 2,                    // 선명하게 (레티나 대응)
+    useCORS: true,
+  })
+    .then((canvas) => {
+      const jpg = canvas.toDataURL("image/jpeg", 0.95);
 
-  /* ----- (B) 실제 자동 전송을 원한다면: EmailJS 예시 -----
-     1) https://www.emailjs.com 가입 후 Service / Template / Public Key 발급
-     2) <head>에 SDK 추가:
-        <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-     3) 아래 placeholder를 본인 값으로 채우고 주석 해제:
+      const link = document.createElement("a");
+      link.download = `데이트약속_${answers.date || "약속"}.jpg`;
+      link.href = jpg;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
 
-     emailjs.init("PUBLIC_KEY");
-     emailjs.send("SERVICE_ID", "TEMPLATE_ID", {
-       to_email: TO_EMAIL,
-       date: answers.date,
-       time: answers.time,
-       food: answers.food,
-       accepted: answers.accepted,
-       createdAt: answers.createdAt,
-     }).then(
-       () => alert("답변이 전송됐어! 💌"),
-       (err) => console.error("전송 실패:", err)
-     );
-
-     ----- (C) 또는 Formspree -----
-     fetch("https://formspree.io/f/FORM_ID", {
-       method: "POST",
-       headers: { "Content-Type": "application/json", Accept: "application/json" },
-       body: JSON.stringify(answers),
-     });
-  */
+      saveHint.textContent = "이미지 저장 완료! 이걸 답장으로 보내줘 💌";
+    })
+    .catch((err) => {
+      console.error("이미지 저장 실패:", err);
+      saveHint.textContent = "저장에 실패했어 😢 다시 한 번 눌러줘";
+    });
 });
 
 /* 처음부터 다시하기: 선택값 초기화 후 1단계로 */
@@ -307,6 +301,7 @@ restartBtn.addEventListener("click", () => {
   dateInput.value = "";
   timeInput.value = "";
   step3Hint.textContent = "";
+  if (saveHint) saveHint.textContent = "";
 
   // 도망 버튼 위치 초기화 + 카드 안 원래 자리로 복귀
   noBtn.classList.remove("is-running");
